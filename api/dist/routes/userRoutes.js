@@ -1,7 +1,7 @@
 import express from "express";
+import { getUser, updateUser } from "../controllers/userControllers.js";
 const router = express.Router();
-router.get("/test", (req, res) => {
-    res.send("holaaaaa");
-});
+router.get("/find/:userId", getUser);
+router.put("/", updateUser);
 export default router;
 //# sourceMappingURL=userRoutes.js.map
