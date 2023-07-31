@@ -21,12 +21,12 @@ const app: Express = express();
 //   });
 
 app.use(express.json());
-// app.use(
-//     cors({
-//       origin: "http://localhost:3000",
-//     })
-// );
-// app.use(cookieParser());
+app.use(
+    cors({
+      origin: "http://localhost:3000",
+    })
+);
+app.use(cookieParser());
   
 //   const storage = multer.diskStorage({
 //     destination: function (req, file, cb) {

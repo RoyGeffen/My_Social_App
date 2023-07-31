@@ -1,5 +1,7 @@
 import express from "express";
 import dotenv from 'dotenv';
+import cors from "cors";
+import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import likeRouter from "./routes/likeRoutes.js";
@@ -13,12 +15,10 @@ const app = express();
 //     next();
 //   });
 app.use(express.json());
-// app.use(
-//     cors({
-//       origin: "http://localhost:3000",
-//     })
-// );
-// app.use(cookieParser());
+app.use(cors({
+    origin: "http://localhost:3000",
+}));
+app.use(cookieParser());
 //   const storage = multer.diskStorage({
 //     destination: function (req, file, cb) {
 //       cb(null, "../client/public/upload");

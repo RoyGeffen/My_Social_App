@@ -32,7 +32,31 @@ export const register = (req:Request, res:Response)=> {
 };
 
 export const login = (req:Request, res:Response)=> {
+    const q = "SELECT * FROM users WHERE username = ?";
 
+    db.query(q, [req.body.username], (err, data) => {
+      if (err) return res.status(500).json(err);
+      if (data.length === 0) return res.status(404).json("User not found!");
+  
+      const checkPassword = bcrypt.compareSync(
+        req.body.password,
+        data[0].password
+      );
+  
+      if (!checkPassword)
+        return res.status(400).json("Wrong password or username!");
+  
+      const token = jwt.sign({ id: data[0].id }, JSON.stringify(process.env.SECRET_KET));
+  
+      const { password, ...others } = data[0];
+  
+      res
+        .cookie("accessToken", token, {
+          httpOnly: true,
+        })
+        .status(200)
+        .json(others);
+    });
 };
 
 export const logout = (req:Request, res:Response)=> {
