@@ -1,13 +1,31 @@
-import { useContext } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 import "./login.scss";
+import axios from "axios";
 
 const Login = () => {
   const { login } = useContext(AuthContext);
+  const navigate = useNavigate()
+  const [inputs, setInputs] = useState({
+    username: "",
+    password: "",
+  });
+  const [err, setErr] = useState(null);
 
-  const handleLogin = () => {
-    login();
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+
+    try {
+      await login(inputs);
+      navigate("/")
+    } catch (err) {
+      if (axios.isAxiosError(err)) setErr(err.response?.data);
+    }
   };
 
   return (
@@ -28,9 +46,10 @@ const Login = () => {
         <div className="right">
           <h1>Login</h1>
           <form>
-            <input type="text" placeholder="Username" />
-            <input type="password" placeholder="Password" />
-            <button onClick={handleLogin}>Login</button>
+            <input type="text" placeholder="Username" name="username" onChange={(e:React.ChangeEvent<HTMLInputElement>)=>handleChange(e)}/>
+            <input type="password" placeholder="Password"name="password" onChange={(e:React.ChangeEvent<HTMLInputElement>)=>handleChange(e)}/>
+            {err && err}
+            <button onClick={((e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{handleClick(e)})}>Login</button>
           </form>
         </div>
       </div>

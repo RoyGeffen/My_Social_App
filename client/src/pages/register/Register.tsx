@@ -1,7 +1,32 @@
 import { Link } from "react-router-dom";
 import "./register.scss";
+import { useState } from "react";
+import axios from "axios";
 
 const Register = () => {
+  const [inputs, setInputs] = useState({
+    username: "",
+    email: "",
+    password: "",
+    name: "",
+  });
+  const [err, setErr] = useState(null);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+
+    try {
+      await axios.post("http://localhost:8080/api/auth/register", inputs); //proxy.........
+    } catch (err) {
+      if (axios.isAxiosError(err)) setErr(err.response?.data);
+    }
+  };
+
+
   return (
     <div className="register">
       <div className="card">
@@ -20,11 +45,32 @@ const Register = () => {
         <div className="right">
           <h1>Register</h1>
           <form>
-            <input type="text" placeholder="Username" />
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <input type="text" placeholder="Name" />
-            <button>Register</button>
+            <input
+              type="text"
+              placeholder="Username"
+              name="username"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{handleChange(e)}}
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              name="email"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{handleChange(e)}}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{handleChange(e)}}
+            />
+            <input
+              type="text"
+              placeholder="Name"
+              name="name"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{handleChange(e)}}
+            />
+            {err && err}
+            <button onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{handleClick(e)}}>Register</button>
           </form>
         </div>
       </div>

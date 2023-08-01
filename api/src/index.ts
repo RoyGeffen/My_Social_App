@@ -15,17 +15,19 @@ dotenv.config();
 const app: Express = express();
 
 
-// app.use((req, res, next) => {
-//     res.header("Access-Control-Allow-Credentials", JSON.stringify(true));
-//     next();
-//   });
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Credentials", JSON.stringify(true));
+    next();
+  });
+const corsOptions ={
+  origin:'http://localhost:5173', 
+  credentials:true,            //access-control-allow-credentials:true
+  optionSuccessStatus:200,
+}
 
 app.use(express.json());
-app.use(
-    cors({
-      origin: "http://localhost:3000",
-    })
-);
+app.use(cors(corsOptions))
+
 app.use(cookieParser());
   
 //   const storage = multer.diskStorage({
