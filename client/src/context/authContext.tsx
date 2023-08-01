@@ -1,25 +1,13 @@
 import axios from "axios";
 import { createContext, useEffect, useState , ReactNode } from "react";
+import { AuthContextValue, LoginInput, User} from "../types/customTypes";
 
-export type User = {
-  id: number;
-  name: string;
-  profilePic: string;
-}
-export type LoginInput = {
-  username:string,
-  password:string
-}
-interface AuthContextValue {
-  currentUser: User | null;
-  login: (inputs: LoginInput) => void;
-}
+
 
 export const AuthContext = createContext<AuthContextValue>({
   currentUser: null,
   login: () => {},
 });
-
 
 export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(
