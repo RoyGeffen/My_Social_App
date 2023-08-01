@@ -17,7 +17,7 @@ const Login = () => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleLogin = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
     try {
@@ -49,7 +49,7 @@ const Login = () => {
             <input type="text" placeholder="Username" name="username" onChange={(e:React.ChangeEvent<HTMLInputElement>)=>handleChange(e)}/>
             <input type="password" placeholder="Password"name="password" onChange={(e:React.ChangeEvent<HTMLInputElement>)=>handleChange(e)}/>
             {err && err}
-            <button onClick={((e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{handleClick(e)})}>Login</button>
+            <button onClick={((e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{handleLogin(e)})}>Login</button>
           </form>
         </div>
       </div>

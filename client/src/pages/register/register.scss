@@ -30,9 +30,6 @@
         font-size: 100px;
         line-height: 100px;
       }
-      
-      p {
-      }
 
       span {
         font-size: 14px;
@@ -80,6 +77,10 @@
           color: white;
           font-weight: bold;
           cursor: pointer;
+        }
+        p{
+          color: red;
+          font-weight: bold;
         }
       }
     }

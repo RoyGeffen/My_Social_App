@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./register.scss";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import axios from "axios";
+import { AuthContext } from "../../context/authContext";
 
 const Register = () => {
   const [inputs, setInputs] = useState({
@@ -11,16 +12,27 @@ const Register = () => {
     name: "",
   });
   const [err, setErr] = useState(null);
+  const { login } = useContext(AuthContext);
+  const navigate = useNavigate()
 
+  const loginAfterRegister = async ()=>{
+    try {
+      await login(inputs);
+      navigate("/")
+    } catch (err) {
+      if (axios.isAxiosError(err)) setErr(err.response?.data);
+    }
+  }
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleClick = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleRegister = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
     try {
       await axios.post("http://localhost:8080/api/auth/register", inputs); //proxy.........
+      loginAfterRegister();
     } catch (err) {
       if (axios.isAxiosError(err)) setErr(err.response?.data);
     }
@@ -31,7 +43,7 @@ const Register = () => {
     <div className="register">
       <div className="card">
         <div className="left">
-          <h1>Lama Social.</h1>
+          <h1>My Social.</h1>
           <p>
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero cum,
             alias totam numquam ipsa exercitationem dignissimos, error nam,
@@ -69,8 +81,10 @@ const Register = () => {
               name="name"
               onChange={(e: React.ChangeEvent<HTMLInputElement>)=>{handleChange(e)}}
             />
+            <p>
             {err && err}
-            <button onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{handleClick(e)}}>Register</button>
+            </p>
+            <button onClick={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{handleRegister(e)}}>Register</button>
           </form>
         </div>
       </div>
