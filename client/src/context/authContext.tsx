@@ -1,7 +1,7 @@
 import axios from "axios";
 import { createContext, useEffect, useState , ReactNode } from "react";
 import { AuthContextValue, LoginInput, User} from "../types/customTypes";
-
+//import { makeRequest } from "../axios.js";
 
 
 export const AuthContext = createContext<AuthContextValue>({
@@ -10,9 +10,10 @@ export const AuthContext = createContext<AuthContextValue>({
 });
 
 export const AuthContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(
-    JSON.parse(localStorage.getItem("user")!) || null
-  );
+  const initialUserString = localStorage.getItem("user");
+  const initialUser: User | null = initialUserString ? JSON.parse(initialUserString) : null;
+
+  const [currentUser, setCurrentUser] = useState<User | null>(initialUser)
 
   const login = async (inputs: LoginInput) => {
     const res = await axios.post("http://localhost:8080/api/auth/login", inputs, {

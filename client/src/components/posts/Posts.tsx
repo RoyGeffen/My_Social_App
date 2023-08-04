@@ -1,4 +1,5 @@
-import SinglePost, { Post }from "../post/SinglePost";
+import SinglePost from "../post/SinglePost";
+import { Post } from "../../types/customTypes";
 import "./posts.scss";
 import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";

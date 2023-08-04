@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { db } from '../connect.js';
 import jwt, { VerifyErrors } from "jsonwebtoken";
+import moment from "moment";
 
 
 export const getPosts = (req: Request, res: Response) => {
@@ -9,7 +10,6 @@ export const getPosts = (req: Request, res: Response) => {
     if (!token) return res.status(401).json("Not logged in!");
     jwt.verify(token, JSON.stringify(process.env.SECRET_KET), (err: VerifyErrors | null , userInfo: any| undefined) => {
       if (err) return res.status(403).json("Token is not valid!");
-  
   
       const q =
         userId == "undefined"
@@ -29,8 +29,29 @@ export const getPosts = (req: Request, res: Response) => {
 };
 
 export const addPost = (req: Request, res: Response) => {
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not logged in!");
 
+  jwt.verify(token, JSON.stringify(process.env.SECRET_KET), (err: VerifyErrors | null , userInfo: any| undefined) => {
+    if (err) return res.status(403).json("Token is not valid!");
+
+    const q =
+      "INSERT INTO posts(`desc`, `img`, `createdAt`, `userid`) VALUES (?)";
+    const values = [
+      req.body.desc,
+      req.body.img,
+      moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+      userInfo.id,
+    ];
+
+    db.query(q, [values], (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json("Post has been created.");
+    });
+  });
 };
+
+
 export const deletePost = (req: Request, res: Response) => {
 
 };

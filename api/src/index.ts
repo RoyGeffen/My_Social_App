@@ -21,30 +21,30 @@ app.use((req, res, next) => {
   });
 const corsOptions ={
   origin:'http://localhost:5173', 
-  credentials:true,            //access-control-allow-credentials:true
+  credentials:true,           
   optionSuccessStatus:200,
 }
 
 app.use(express.json());
 app.use(cors(corsOptions))
-
 app.use(cookieParser());
   
-//   const storage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//       cb(null, "../client/public/upload");
-//     },
-//     filename: function (req, file, cb) {
-//       cb(null, Date.now() + file.originalname);
-//     },
-//   });
-// const upload = multer({ storage: storage });
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "../client/public/upload");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  },
 
+});
 
-// app.post("/api/upload", upload.single("file"), (req, res) => {
-//   const file: Express.Multer.File | undefined = req.file;
-//   res.status(200).json(file?.filename);
-// });
+const upload = multer({ storage: storage });
+
+app.post("/api/upload", upload.single("file"), (req, res) => {
+  const file: Express.Multer.File | undefined = req.file;
+  res.status(200).json(file?.filename);
+});
 
 
 app.use("/api/auth", authRouter);
