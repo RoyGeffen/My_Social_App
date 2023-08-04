@@ -10,6 +10,7 @@ import storyRouter from "./routes/storyRoutes.js" //????????????????????????????
 import commentRouter from "./routes/commentRouts.js"
 import postRouter from "./routes/postRoutes.js"
 import relationshipsRouter from "./routes/relationshipsRoutes.js"
+import uploadRouter from "./routes/uploadRouters.js"
 
 dotenv.config();
 const app: Express = express();
@@ -29,24 +30,8 @@ app.use(express.json());
 app.use(cors(corsOptions))
 app.use(cookieParser());
   
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "../client/public/upload");
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + file.originalname);
-  },
 
-});
-
-const upload = multer({ storage: storage });
-
-app.post("/api/upload", upload.single("file"), (req, res) => {
-  const file: Express.Multer.File | undefined = req.file;
-  res.status(200).json(file?.filename);
-});
-
-
+app.use("/api/upload", uploadRouter)
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
