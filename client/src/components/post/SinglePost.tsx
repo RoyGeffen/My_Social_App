@@ -57,7 +57,7 @@ const SinglePost = (props :Props) => {
             Share
           </div>
         </div>
-        {commentOpen && <Comments />}
+        {commentOpen && <Comments postId={props.post.id}/>}
       </div>
     </div>
   );
