@@ -4,20 +4,7 @@ import { AuthContext } from "../../context/authContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import moment from "moment";
-
-export type Comment = {
-  id: number;
-  desc: string;
-  name: string;
-  userId: number;
-  profilePicture: string;
-  createdAt: Date;
-}
-
-export type NewComment={
-  desc:string,
-  postId: number
-}
+import {Comment, NewComment} from "../../types/customTypes.js"
 
 type Props = {
   postId:number

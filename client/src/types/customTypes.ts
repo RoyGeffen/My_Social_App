@@ -22,5 +22,19 @@ export type Post ={
     img?:string
   }
 
+  export type Comment = {
+    id: number;
+    desc: string;
+    name: string;
+    userId: number;
+    profilePicture: string;
+    createdAt: Date;
+  }
+  
+  export type NewComment={
+    desc:string,
+    postId: number
+  }
+  
   
   
