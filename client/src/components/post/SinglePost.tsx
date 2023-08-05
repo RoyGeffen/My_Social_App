@@ -6,21 +6,61 @@ import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link } from "react-router-dom";
 import Comments from "../comments/Comments";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Post } from "../../types/customTypes";
 import moment from "moment"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { AuthContext } from "../../context/authContext";
+import { makeRequest } from "../../axios";
   
 export type Props ={
   post:Post,
   key:number
 }
+export type Like = {
+  liked: boolean | null;
+}
 
 const SinglePost = (props :Props) => {
   const [commentOpen, setCommentOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const queryClient = useQueryClient();
+  const { currentUser } = useContext(AuthContext);
 
-  //TEMPORARY
-  const liked = false;
+  const { isLoading, error, data } = useQuery(["likes", props.post.id], () =>
+    makeRequest.get("/likes?postId=" + props.post.id).then((res) => {
+      return res.data;
+    })
+  );
 
+  const mutation = useMutation(
+    (liked: Like) => {
+      if (liked) return makeRequest.delete("/likes?postId=" +  props.post.id);
+      return makeRequest.post("/likes", { postId:  props.post.id });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["likes"]);
+      },
+    }
+  );
+  const deleteMutation = useMutation(
+    (postId: number) => {
+      return makeRequest.delete("/posts/" + postId);
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["posts"]);
+      },
+    }
+  );
+  const handleLike = () => {
+    mutation.mutate(data.includes(currentUser?.id));
+  };
+
+  const handleDelete = () => {
+    deleteMutation.mutate(props.post.id);
+  };
   return (
     <div className="post">
       <div className="container">
@@ -29,7 +69,7 @@ const SinglePost = (props :Props) => {
             <img src={props.post.profilePic} alt="" />
             <div className="details">
               <Link
-                to={`/profile/${props.post.userId}`}
+                to={`/profile/${props.post.userid}`}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
                 <span className="name">{props.post.name}</span>
@@ -45,8 +85,11 @@ const SinglePost = (props :Props) => {
         </div>
         <div className="info">
           <div className="item">
-            {liked ? <FavoriteOutlinedIcon /> : <FavoriteBorderOutlinedIcon />}
-            12 Likes
+            {isLoading?"Loading": 
+              data.includes(currentUser?.id) 
+                   ? <FavoriteOutlinedIcon style={{color:"red"}} onClick={handleLike}/> 
+                   : <FavoriteBorderOutlinedIcon onClick={handleLike}/>}
+            {data?.length} Likes
           </div>
           <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
             <TextsmsOutlinedIcon />

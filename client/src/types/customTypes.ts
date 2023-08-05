@@ -2,7 +2,21 @@ export type User = {
     id: number;
     name: string;
     profilePic: string;
+    coverPic?: string;
+    city?:string;
+    websites?:UserLinks;
+    email?:string;
+    username?:string;
   }
+export type UserLinks={
+  id:number;
+  facebook?:string;
+  instagram?:string;
+  twitter?:string;
+  linkedIn?:string;
+  pinterest?:string;
+}
+
 export type LoginInput = {
     username:string,
     password:string
@@ -15,7 +29,7 @@ export interface AuthContextValue {
 export type Post ={
     id:number,
     name:string,
-    userId:number,
+    userid:number,
     createdAt: Date,
     profilePic?:string,
     desc?:string,
@@ -27,7 +41,7 @@ export type Post ={
     desc: string;
     name: string;
     userId: number;
-    profilePicture: string;
+    profilePic: string;
     createdAt: Date;
   }
   
