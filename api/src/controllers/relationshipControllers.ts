@@ -4,9 +4,10 @@ import jwt, { VerifyErrors } from "jsonwebtoken";
 
 
 export const getRelationships = (req: Request, res: Response)=>{
-    const q = "SELECT followerUserid FROM relationships WHERE followedUserid = ?";
 
-    db.query(q, [req.query.followedUserId], (err, data) => {
+    const q = "SELECT followerUserid FROM relationships WHERE followedUserid = (?)";
+
+    db.query(q, [req.query.followedUserid], (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json(data.map((relationship:{followerUserid: number}) =>relationship.followerUserid));
     });

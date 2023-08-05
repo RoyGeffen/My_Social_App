@@ -81,7 +81,7 @@ const SinglePost = (props :Props) => {
         </div>
         <div className="content">
           <p>{props.post.desc}</p>
-          <img src={"./upload/" + props.post.img} alt="" />
+          <img src={"/upload/" + props.post.img} alt="" />
         </div>
         <div className="info">
           <div className="item">

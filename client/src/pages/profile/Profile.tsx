@@ -103,9 +103,10 @@ const Profile = () => {
                 <span>{data?.name}</span>
               </div>
             </div>
-            {currentUser?.id === userId 
+            {rIsLoading? "Loading" 
+            : currentUser?.id === userId 
               ? (<button>Update Profile</button>)
-              : (<button onClick={handleFollow}>follow</button>)}
+              : (<button onClick={handleFollow}>{relationshipData.includes(currentUser?.id) ? "unfollow" : "follow"}</button>)}
           </div>
           <div className="right">
             <EmailOutlinedIcon />
