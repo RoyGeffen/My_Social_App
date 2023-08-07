@@ -113,7 +113,7 @@ const Profile = () => {
             <MoreVertIcon />
           </div>
         </div>
-      <Posts userId={currentUser?currentUser.id: 1}/>
+      <Posts userId={userId || undefined}/>
       </div></>}
     </div>
   );

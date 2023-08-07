@@ -14,7 +14,7 @@ const Posts: React.FC<PostsProps> = ({userId}) => {
     return res.data;
     })
   );
-
+  console.log(userId);
   return (
     <div className="posts">
       {error

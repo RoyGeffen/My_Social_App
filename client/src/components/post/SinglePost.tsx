@@ -66,7 +66,9 @@ const SinglePost = (props :Props) => {
       <div className="container">
         <div className="user">
           <div className="userInfo">
+          <a href={`/profile/${props.post.userid}`}>
             <img src={props.post.profilePic} alt="" />
+          </a>
             <div className="details">
               <Link
                 to={`/profile/${props.post.userid}`}
