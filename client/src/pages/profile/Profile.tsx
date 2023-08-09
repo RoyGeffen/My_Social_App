@@ -15,6 +15,7 @@ import { AuthContext } from "../../context/authContext";
 import { useLocation } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
+import Update from "../../components/update/Update.js";
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -105,7 +106,7 @@ const Profile = () => {
             </div>
             {rIsLoading? "Loading" 
             : currentUser?.id === userId 
-              ? (<button>Update Profile</button>)
+              ? (<button onClick={()=>setOpenUpdate(true)}>Update Profile</button>)
               : (<button onClick={handleFollow}>{relationshipData.includes(currentUser?.id) ? "unfollow" : "follow"}</button>)}
           </div>
           <div className="right">
@@ -114,7 +115,9 @@ const Profile = () => {
           </div>
         </div>
       <Posts userId={userId || undefined}/>
-      </div></>}
+      </div>
+      </>}
+      {openUpdate && <Update setOpenUpdate={setOpenUpdate}/>}
     </div>
   );
 };
