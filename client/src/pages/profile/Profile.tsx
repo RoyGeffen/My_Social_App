@@ -117,7 +117,7 @@ const Profile = () => {
       <Posts userId={userId || undefined}/>
       </div>
       </>}
-      {openUpdate && <Update setOpenUpdate={setOpenUpdate}/>}
+      {openUpdate && <Update setOpenUpdate={setOpenUpdate} user={data || {id: 0,name: "",profilePic: ""}}/>}
     </div>
   );
 };

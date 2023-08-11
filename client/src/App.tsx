@@ -49,6 +49,7 @@ function App() {
       </QueryClientProvider>
     );
   };
+  
   const CheckCookie = async()=>{
     const res = await axios.get("http://localhost:8080/api/cookies/tokenExists", {
       withCredentials: true,
@@ -78,7 +79,7 @@ function App() {
     if (isLoading) {
       return <p>Loading...</p>;
     }
-    
+
     if (!currentUser || !tokenExists) {
       return <Navigate to="/login" />;
     }
