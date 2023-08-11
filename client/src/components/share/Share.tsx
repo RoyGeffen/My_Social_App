@@ -6,6 +6,7 @@ import { useContext, useState } from "react";
 import { AuthContext } from "../../context/authContext";
 import { makeRequest } from "../../axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 
 
 export type newPost = {
@@ -21,16 +22,23 @@ const Share = () => {
 
   const upload = async () => {
     try {
-      const formData = new FormData();
+      const data = new FormData();
       if(!file) console.log("NO FILE GIVEN TO UPLOAD");
-      if(file) formData.append("file", file);
-      const res = await makeRequest.post("/upload", formData);
-      return res.data;
+      if(file){
+        data.append("file", file);
+        data.append("upload_preset", "upload");
+      }
+      const uploadRes = await axios.post(
+        "https://api.cloudinary.com/v1_1/das1ifbzs/image/upload",
+        data
+      );
+      const { url } = uploadRes.data;
+      return url;
     } catch (err) {
       console.log(err);
     }
   };
-
+  
   const mutation = useMutation(
     (newPost: newPost) => {
       return makeRequest.post("/posts", newPost);

@@ -1,9 +1,9 @@
 import express from "express";
-import { getStories, addStory, deleteStory } from "../controllers/storyControllers.js";
+import { getStoriesByUserId, addStory, deleteStory } from "../controllers/storyControllers.js";
 
 const router = express.Router();
 
-router.get("/", getStories);
+router.get("/", getStoriesByUserId);
 router.post("/", addStory);
 router.delete("/:id", deleteStory);
 

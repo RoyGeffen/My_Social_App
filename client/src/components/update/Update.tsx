@@ -19,18 +19,6 @@ const Update: React.FC<IUpdate> = ({ setOpenUpdate, user }) => {
       user
     );
 
-    // const upload = async (file: File) => {
-    //     try {
-    //       const formData = new FormData();
-    //       if(!file) console.log("NO FILE GIVEN TO UPLOAD");
-    //       if(file) formData.append("file", file);
-    //       const res = await makeRequest.post("/upload", formData);
-    //       return res.data;
-    //     } catch (err) {
-    //       console.log(err);
-    //     }
-    //   };
-
     const upload = async (file:File)=>{
       const data = new FormData();
       data.append("file", file);

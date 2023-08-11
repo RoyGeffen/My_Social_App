@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import userRouter from "./routes/userRoutes.js";
 import authRouter from "./routes/authRoutes.js";
 import likeRouter from "./routes/likeRoutes.js";
+import storyRouter from "./routes/storyRoutes.js";
 import commentRouter from "./routes/commentRouts.js";
 import cookieRouter from "./routes/cookieRoutes.js";
 import postRouter from "./routes/postRoutes.js";
@@ -32,6 +33,7 @@ app.use("/api/comments", commentRouter);
 app.use("/api/cookies", cookieRouter);
 app.use("/api/likes", likeRouter);
 app.use("/api/relationships", relationshipsRouter);
+app.use("/api/stories", storyRouter);
 app.listen(8080, () => {
     console.log("API ONLINE");
 });

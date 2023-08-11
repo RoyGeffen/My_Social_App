@@ -79,11 +79,14 @@ const SinglePost = (props :Props) => {
               <span className="date">{moment(props.post.createdAt).fromNow()}</span>
             </div>
           </div>
-          <MoreHorizIcon />
+          <MoreHorizIcon onClick={()=>props.post.userid == currentUser?.id && setMenuOpen(!menuOpen)}/>
+          {menuOpen && <button onClick={handleDelete}>Delete</button>}
         </div>
         <div className="content">
           <p>{props.post.desc}</p>
-          <img src={"/upload/" + props.post.img} alt="" />
+          <img src={(props.post && props.post.img && props.post.img.startsWith("http")? 
+                      props.post.img : 
+                      "/upload/" + props.post.img)} alt="" />
         </div>
         <div className="info">
           <div className="item">
