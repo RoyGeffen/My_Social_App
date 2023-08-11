@@ -44,8 +44,8 @@ export const updateUser = (req, res) => {
             req.body.username,
             req.body.email,
             req.body.city,
-            req.body.coverPic,
             req.body.profilePic,
+            req.body.coverPic,
             userInfo.id,
         ], (err, data) => {
             if (err)

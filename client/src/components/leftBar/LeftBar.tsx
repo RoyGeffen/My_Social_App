@@ -27,7 +27,9 @@ const LeftBar = () => {
           <div className="user">
           <a href={`/profile/${currentUser?.id}`}>
             <img
-              src={currentUser?.profilePic}
+              src={(currentUser&& currentUser.profilePic && currentUser.profilePic.startsWith("http")? 
+              currentUser.profilePic : 
+              "/upload/" + currentUser?.profilePic)}
               alt=""
             />
           </a>

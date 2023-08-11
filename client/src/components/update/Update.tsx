@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { User } from "../../types/customTypes";
 import React from "react";
+import axios from "axios";
 
 interface IUpdate {
     setOpenUpdate: React.Dispatch<React.SetStateAction<boolean>>;
@@ -14,24 +15,42 @@ interface IUpdate {
 const Update: React.FC<IUpdate> = ({ setOpenUpdate, user }) => {
     const [cover, setCover] = useState<File | null>(null);
     const [profile, setProfile] = useState<File | null>(null);
-    const [texts, setTexts] = useState( //TODO ADD USER REDUCER AND ALL DETAILS
+    const [texts, setTexts] = useState<User>( //TODO ADD USER REDUCER AND ALL DETAILS
       user
     );
 
-    const upload = async (file: File) => {
-        try {
-          const formData = new FormData();
-          if(!file) console.log("NO FILE GIVEN TO UPLOAD");
-          if(file) formData.append("file", file);
-          const res = await makeRequest.post("/upload", formData);
-          return res.data;
-        } catch (err) {
-          console.log(err);
-        }
-      };
+    // const upload = async (file: File) => {
+    //     try {
+    //       const formData = new FormData();
+    //       if(!file) console.log("NO FILE GIVEN TO UPLOAD");
+    //       if(file) formData.append("file", file);
+    //       const res = await makeRequest.post("/upload", formData);
+    //       return res.data;
+    //     } catch (err) {
+    //       console.log(err);
+    //     }
+    //   };
+
+    const upload = async (file:File)=>{
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "upload");
+      const uploadRes = await axios.post(
+        "https://api.cloudinary.com/v1_1/das1ifbzs/image/upload",
+        data
+      );
+      const { url } = uploadRes.data;
+      return url;
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>)=>{
         setTexts((prev)=> ({...prev, [e.target.name]:[e.target.value] }))
+    }
+    const handleWebsiteChange=(e: React.ChangeEvent<HTMLInputElement>)=>{
+      setTexts((prev)=>({
+        ...prev, 
+        websites: { ...prev.websites, [e.target.name]: e.target.value },
+      }))
     }
 
     const queryClient = useQueryClient();
@@ -65,8 +84,11 @@ const Update: React.FC<IUpdate> = ({ setOpenUpdate, user }) => {
         setProfile(null);
     }
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
+    const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
       setCover((prev)=>(e.target.files && e.target.files[0] ? e.target.files[0] : prev))
+    }
+    const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
+      setProfile((prev)=>(e.target.files && e.target.files[0] ? e.target.files[0] : prev))
     }
 
 
@@ -76,14 +98,16 @@ const Update: React.FC<IUpdate> = ({ setOpenUpdate, user }) => {
           <h1>Update Your Profile</h1>
           <form>
             <div className="files">
-              {/* <label htmlFor="cover">
+              <label htmlFor="cover">
                 <span>Cover Picture</span>
                 <div className="imgContainer">
                   <img
                     src={
                       cover
                         ? URL.createObjectURL(cover)
-                        : "/upload/" + user.coverPic
+                        : (user.coverPic && user.coverPic.startsWith("http")? 
+                           user.coverPic : 
+                           "/upload/" + user.coverPic)
                     }
                     alt=""
                   />
@@ -94,7 +118,7 @@ const Update: React.FC<IUpdate> = ({ setOpenUpdate, user }) => {
                 type="file"
                 id="cover"
                 style={{ display: "none" }}
-                onChange={handleFileChange}
+                onChange={handleCoverChange}
               />
               <label htmlFor="profile">
                 <span>Profile Picture</span>
@@ -103,54 +127,29 @@ const Update: React.FC<IUpdate> = ({ setOpenUpdate, user }) => {
                     src={
                       profile
                         ? URL.createObjectURL(profile)
-                        : "/upload/" + user.profilePic
+                        : (user.profilePic.startsWith("http")? 
+                              user.profilePic : 
+                              "/upload/" + user.profilePic)
                     }
                     alt=""
                   />
                   <CloudUploadIcon className="icon" />
                 </div>
-              </label> */}
+              </label>
               <input
                 type="file"
                 id="profile"
                 style={{ display: "none" }}
-                onChange={handleFileChange}
+                onChange={handleProfileChange}
               />
             </div>
-            {/* <label>Email</label>
-            <input
-              type="text"
-              // value={texts.user.email}
-              name="email"
-              onChange={handleChange}
-            />
-            <label>Name</label>
-            <input
-              type="text"
-              value={texts.name}
-              name="name"
-              onChange={handleChange}
-            />
-            <label>Country / City</label>
-            <input
-              type="text"
-              name="city"
-              value={texts.city}
-              onChange={handleChange}
-            />
-            <label>FACEBOOK</label>
-            <input
-              type="text"
-              name="website"
-              value={texts.websites?.facebook}
-              onChange={handleChange}
-            /> */}
+
             {texts&& 
              Object.entries(user).map(([key, value]) => (
-              !(key == "coverPic") && !(key == "profilePic") &&                 
-                <React.Fragment key={key}>
+               !(key == "coverPic") && !(key == "profilePic") && !(key == "id") && !(key == "websites") &&                  
+               <React.Fragment key={key}>
                   <label key={`label_${key}`}>
-                    {key}
+                    {key.charAt(0).toUpperCase() + key.slice(1)}
                   </label>
                   <input
                     type="text"
@@ -161,6 +160,24 @@ const Update: React.FC<IUpdate> = ({ setOpenUpdate, user }) => {
                     />
                 </React.Fragment>
             ))}
+
+          <div className="formInputContainer">
+            {texts&& user.websites &&
+             Object.entries(user.websites).map(([key, value]) => (
+               !(key == "id") && !(key == "userid") &&
+              <div className="formInput" key={key}>
+                <label key={`label_${key}`}>
+                  {key.charAt(0).toUpperCase() + key.slice(1)}
+                </label>
+                <input 
+                  name={key} 
+                  onChange={handleWebsiteChange} 
+                  type="text"                  
+                  placeholder={typeof value === 'object' ? JSON.stringify(value) : String(value ?? 'N/A')}
+                  />
+              </div>
+            ))}
+            </div>
             <button onClick={handleSubmit}>Update</button>
           </form>
           <button className="close" onClick={() => setOpenUpdate(false)}>

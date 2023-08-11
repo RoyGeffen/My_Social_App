@@ -9,7 +9,7 @@ export type User = {
     username?:string;
   }
 export type UserLinks={
-  id:number;
+  id?:number;
   facebook?:string;
   instagram?:string;
   twitter?:string;
