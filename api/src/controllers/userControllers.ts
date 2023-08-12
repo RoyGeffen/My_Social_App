@@ -2,7 +2,15 @@ import { Request, Response, NextFunction } from 'express';
 import { db } from '../connect.js';
 import jwt, { VerifyErrors } from "jsonwebtoken";
 
-
+export const getUserByName = (req: Request, res: Response) => {
+  const searchStr = req.query.str;
+  const q = "SELECT id, username, profilePic FROM users WHERE `username` LIKE ? OR `name` LIKE ? OR `email` LIKE ? OR `id`=?";
+  const qStr = `${searchStr}%`
+  db.query(q, [qStr,qStr,qStr,searchStr], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.json(data);
+  });
+};
 
 export const getUser = (req: Request, res: Response) => {
     const userId = req.params.userId;

@@ -5,26 +5,49 @@
   gap: 10px;
   height: 250px;
   margin-bottom: 30px;
-
-  @include mobile {
-    height: 50px;
-    margin-bottom: 0;
-    justify-content: space-between;
-  }
+  overflow-x: auto; /* Use 'auto' for the default scrollbar behavior */
+  max-width: 900px;
 
   @include tablet{
+    max-width: 640px;
     height: 150px;
     gap: 20px;
   }
 
+  @include mobile {
+    height: 50px;
+    margin-bottom: 20px;
+    justify-content: flex-start; /* Adjust as needed */
+    white-space: nowrap;
+    overflow-x: hidden; /* Add this line */
+  }
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+  }
+  
+
   .story {
-    flex: 1;
+    flex: 0 0 auto; /* Allow shrinking */
+    //flex: 1;
     border-radius: 10px;
     overflow: hidden;
     position: relative;
+    width: 170px; //
+    
 
     @include mobile {
-      flex: none;
+      flex: 0 0 auto; /* Allow shrinking */
       width: 50px;
       height: 50px;
       border-radius: 50%;
@@ -35,21 +58,64 @@
       height: 100%;
       object-fit: cover;
     }
-    span {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      color: white;
-      font-weight: 500;
-      background-color: rgba(0, 0, 0, 0.5);
-      @include mobile {
-        display: none;
+    .details {
+      display: flex;
+      flex-direction: column;
+
+      .name {
+        position: absolute;
+        bottom: 20px;
+        left: 10px;
+        color: white;
+        font-weight: 500;
+        background-color: rgba(0, 0, 0, 0.2);
+        @include mobile {
+          display: none;
+        }
+      }
+
+      .date {
+        font-size: 12px;
+        position: absolute;
+        bottom: 0px;
+        left: 10px;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.5);
+        @include mobile {
+          display: none;
+        }
       }
     }
 
-    button {
+    .delete{
+      button{
+        position: absolute;
+        top: 10px;
+        right: 5px;
+        border: none;
+        background: #f0544f;
+        padding: 5px;
+        cursor: pointer;
+        color: white;
+        font-size: 12px; /* Adjust font size */
+        border-radius: 4px; /* Add border radius */
+      }
+      @include mobile {
+        display: block; /* Show on mobile */
+        border: none;
+        border-radius: 50%;
+        width: 10px;
+        height: 10px;
+        position: absolute;
+        bottom: 30px;
+        left: 10px;
+        overflow: visible;
+        z-index: 99;
+      }
+    }
+    .create{
       position: absolute;
-      bottom: 40px;
+      bottom: 30px;
       left: 10px;
       color: white;
       background-color: #5271ff;
@@ -62,13 +128,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
-
+      
       @include mobile {
-       left: 0;
-       right: 0;
-       top: 0;
-       bottom: 0;
-       margin: auto;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
       }
     }
   }
