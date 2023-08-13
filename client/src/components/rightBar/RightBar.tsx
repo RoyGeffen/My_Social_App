@@ -48,7 +48,7 @@ const RightBar = () => {
               <div className="userInfo" onClick={()=>navigate("/profile/"+suggestion.id)}>
                 <img
                   src={suggestion.profilePic}
-                  alt=""
+                  alt=" "
                 />
                 <span>{suggestion.username}</span>
               </div>
