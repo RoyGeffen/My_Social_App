@@ -14,6 +14,7 @@ import { AuthContext } from "../../context/authContext";
 import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import { User } from "../../types/customTypes";
+import DropDownList from "../dropDownList/dropDownList";
 
 const Navbar = () => {
   const [search, setSearch] = useState("")
@@ -73,14 +74,11 @@ const Navbar = () => {
         <EmailOutlinedIcon />
         <NotificationsOutlinedIcon />
         <div className="user">
-          <img
-            src={currentUser?.profilePic}
-            alt=""
-          />
+          <DropDownList/>
           <span>{currentUser?.name}</span>
         </div>
       </div>
-    </div>
+    </div>     
   );
 };
 
