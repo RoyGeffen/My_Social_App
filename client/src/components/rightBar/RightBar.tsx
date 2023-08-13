@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {useState} from "react"
 import { makeRequest } from "../../axios";
 import "./rightBar.scss";
 import { AuthContext } from "../../context/authContext";
@@ -9,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 const RightBar = () => {
   const {currentUser} = useContext(AuthContext)
+  const [blackList, setBlackList] = useState<number[]>([]);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { isLoading, error, data:suggestions  } = useQuery(["suggestions"], () =>
@@ -17,8 +19,10 @@ const RightBar = () => {
     })
   );
 
-  const handleDismiss = ()=>{
-
+  const handleDismiss = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
+    let otherUserid = parseInt(e.currentTarget.value);
+    console.log(otherUserid);
+    setBlackList((prev)=>[...prev, otherUserid])
   }
 
   const mutation = useMutation(
@@ -36,14 +40,17 @@ const RightBar = () => {
     let otherUserid = e.currentTarget.value;
     mutation.mutate(parseInt(otherUserid));
   };
-
   return (
     <div className="rightBar">
       <div className="container">
         <div className="item">
           <span>Suggestions For You</span>
           {isLoading?"Loading...":
-            suggestions && suggestions.map((suggestion:User)=>(
+            (suggestions.length==blackList.length || suggestions.length==0) ? 
+              <span className="user">{"    No Suggestions For You At The Moment"}</span>
+            :
+            suggestions.map((suggestion:User)=>(
+            !blackList.includes(suggestion.id) &&
             <div className="user" key={suggestion.id}>
               <div className="userInfo" onClick={()=>navigate("/profile/"+suggestion.id)}>
                 <img
@@ -58,8 +65,13 @@ const RightBar = () => {
                   name="otherUserid" 
                   value={suggestion.id}>
                     follow
-                  </button>
-                <button onClick={handleDismiss} name="otherUserid">dismiss</button>
+                </button>
+                <button 
+                  onClick={handleDismiss} 
+                  value={suggestion.id}
+                  name="otherUserid">
+                    dismiss
+                </button>
               </div>
             </div>
             ))}
