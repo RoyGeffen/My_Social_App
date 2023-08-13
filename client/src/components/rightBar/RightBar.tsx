@@ -1,38 +1,70 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { makeRequest } from "../../axios";
 import "./rightBar.scss";
+import { AuthContext } from "../../context/authContext";
+import { useContext } from "react";
+import { User } from "../../types/customTypes";
+import { Value } from "sass";
+import { useNavigate } from "react-router-dom";
 
 const RightBar = () => {
+  const {currentUser} = useContext(AuthContext)
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const { isLoading, error, data:suggestions  } = useQuery(["suggestions"], () =>
+    makeRequest.get("/users/suggestion").then((res) => {
+      return res.data;
+    })
+  );
+
+  const handleDismiss = ()=>{
+
+  }
+
+  const mutation = useMutation(
+    (id:number) => {
+      return makeRequest.post("/relationships", { userId:id });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["suggestions"]);
+      },
+    }
+  );
+
+  const handleFollow = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    let otherUserid = e.currentTarget.value;
+    mutation.mutate(parseInt(otherUserid));
+  };
+
   return (
     <div className="rightBar">
       <div className="container">
         <div className="item">
           <span>Suggestions For You</span>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <span>Jane Doe</span>
+          {isLoading?"Loading...":
+            suggestions && suggestions.map((suggestion:User)=>(
+            <div className="user" key={suggestion.id}>
+              <div className="userInfo" onClick={()=>navigate("/profile/"+suggestion.id)}>
+                <img
+                  src={suggestion.profilePic}
+                  alt=""
+                />
+                <span>{suggestion.username}</span>
+              </div>
+              <div className="buttons">
+                <button 
+                  onClick={handleFollow} 
+                  name="otherUserid" 
+                  value={suggestion.id}>
+                    follow
+                  </button>
+                <button onClick={handleDismiss} name="otherUserid">dismiss</button>
+              </div>
             </div>
-            <div className="buttons">
-              <button>follow</button>
-              <button>dismiss</button>
-            </div>
+            ))}
           </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <span>Jane Doe</span>
-            </div>
-            <div className="buttons">
-              <button>follow</button>
-              <button>dismiss</button>
-            </div>
-          </div>
-        </div>
+
         <div className="item">
           <span>Latest Activities</span>
           <div className="user">
@@ -40,7 +72,7 @@ const RightBar = () => {
               <img
                 src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
                 alt=""
-              />
+                />
               <p>
                 <span>Jane Doe</span> changed their cover picture
               </p>
@@ -52,7 +84,7 @@ const RightBar = () => {
               <img
                 src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
                 alt=""
-              />
+                />
               <p>
                 <span>Jane Doe</span> changed their cover picture
               </p>
@@ -64,7 +96,7 @@ const RightBar = () => {
               <img
                 src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
                 alt=""
-              />
+                />
               <p>
                 <span>Jane Doe</span> changed their cover picture
               </p>
@@ -76,7 +108,7 @@ const RightBar = () => {
               <img
                 src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
                 alt=""
-              />
+                />
               <p>
                 <span>Jane Doe</span> changed their cover picture
               </p>
@@ -91,7 +123,87 @@ const RightBar = () => {
               <img
                 src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
                 alt=""
-              />
+                />
+              <div className="online" />
+              <span>Jane Doe</span>
+            </div>
+          </div>
+          <div className="user">
+            <div className="userInfo">
+              <img
+                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt=""
+                />
+              <div className="online" />
+              <span>Jane Doe</span>
+            </div>
+          </div>
+          <div className="user">
+            <div className="userInfo">
+              <img
+                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt=""
+                />
+              <div className="online" />
+              <span>Jane Doe</span>
+            </div>
+          </div>
+          <div className="user">
+            <div className="userInfo">
+              <img
+                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt=""
+                />
+              <div className="online" />
+              <span>Jane Doe</span>
+            </div>
+          </div>
+          <div className="user">
+            <div className="userInfo">
+              <img
+                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt=""
+                />
+              <div className="online" />
+              <span>Jane Doe</span>
+            </div>
+          </div>
+          <div className="user">
+            <div className="userInfo">
+              <img
+                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt=""
+                />
+              <div className="online" />
+              <span>Jane Doe</span>
+            </div>
+          </div>
+          <div className="user">
+            <div className="userInfo">
+              <img
+                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt=""
+                />
+              <div className="online" />
+              <span>Jane Doe</span>
+            </div>
+          </div>
+          <div className="user">
+            <div className="userInfo">
+              <img
+                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt=""
+                />
+              <div className="online" />
+              <span>Jane Doe</span>
+            </div>
+          </div>
+          <div className="user">
+            <div className="userInfo">
+              <img
+                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                alt=""
+                />
               <div className="online" />
               <span>Jane Doe</span>
             </div>
@@ -111,87 +223,7 @@ const RightBar = () => {
               <img
                 src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
                 alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
-              <div className="online" />
-              <span>Jane Doe</span>
-            </div>
-          </div>
-          <div className="user">
-            <div className="userInfo">
-              <img
-                src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                alt=""
-              />
+                />
               <div className="online" />
               <span>Jane Doe</span>
             </div>
@@ -203,3 +235,18 @@ const RightBar = () => {
 };
 
 export default RightBar;
+
+                {/* <div className="user">
+                  <div className="userInfo">
+                    <img
+                      src="https://images.pexels.com/photos/4881619/pexels-photo-4881619.jpeg?auto=compress&cs=tinysrgb&w=1600"
+                      alt=""
+                    />
+                    <span>Jane Doe</span>
+                  </div>
+                  <div className="buttons">
+                    <button>follow</button>
+                    <button>dismiss</button>
+                  </div>
+                </div>
+              </div> */}

@@ -76,3 +76,29 @@ export const updateUser = (req: Request, res: Response) => {
       );
     });
 };
+
+export const getSuggestions  = (req: Request, res: Response) => {
+  const token = req.cookies.accessToken;
+  
+  if (!token) return res.status(401).json("Not authenticated!");
+  jwt.verify(token, JSON.stringify(process.env.SECRET_KET), (err: VerifyErrors | null , userInfo: any| undefined) => {
+    if (err) return res.status(403).json("Token is not valid!");
+
+    const q = `SELECT DISTINCT rff.followedUserid AS friend_of_friend_id, rff.id AS relationshipId, uff.*
+    FROM users AS u
+    JOIN relationships AS rf ON u.id = rf.followerUserid
+    JOIN relationships AS rff ON rf.followedUserid = rff.followerUserid
+    JOIN users AS uff ON rff.followedUserid = uff.id
+    WHERE u.id = ?
+        AND rff.followedUserid != ?
+        AND rff.followedUserid NOT IN (SELECT followedUserid FROM relationships WHERE followerUserid = ?)
+        LIMIT 4`
+
+
+
+    db.query(q, [userInfo.id,userInfo.id,userInfo.id], (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.json(data);
+    });
+  })
+};

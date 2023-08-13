@@ -1,4 +1,5 @@
 import "./profile.scss";
+import React, { useEffect } from 'react';
 import { User } from "../../types/customTypes";
 import FacebookTwoToneIcon from "@mui/icons-material/FacebookTwoTone";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -20,7 +21,7 @@ import Update from "../../components/update/Update.js";
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const {currentUser} = useContext(AuthContext);
-
+  const location = useLocation();
   const userId = parseInt(useLocation().pathname.split("/")[2]);
 
   const { isLoading, error, data } = useQuery<boolean, any, User>(["user"], () =>
@@ -28,6 +29,10 @@ const Profile = () => {
       return res.data;
     })
   );
+
+  useEffect(() => {
+    queryClient.invalidateQueries(["user"]);
+  }, [userId]);
 
   
   const { isLoading: rIsLoading, data: relationshipData } = useQuery(
