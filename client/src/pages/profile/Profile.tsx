@@ -32,9 +32,8 @@ const Profile = () => {
 
   useEffect(() => {
     queryClient.invalidateQueries(["user"]);
-  }, [userId]);
+  }, []);
 
-  
   const { isLoading: rIsLoading, data: relationshipData } = useQuery(
     ["relationship"],
     () =>
@@ -63,6 +62,8 @@ const Profile = () => {
     mutation.mutate(relationshipData.includes(currentUser?.id));
   };
   
+  console.log(data);
+  console.log(relationshipData);
   return (
     <div className="profile">
       {isLoading? "Loading...":

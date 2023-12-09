@@ -18,6 +18,7 @@ import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/authContext";
 import { makeRequest } from "./axios";
 import axios from "axios";
+import Friends from "./pages/friends/Friends";
 
 
 
@@ -103,6 +104,10 @@ function App() {
         {
           path: "/profile/:id",
           element: <Profile />,
+        },
+        {
+          path: "/friends",
+          element: <Friends />,
         },
       ],
     },

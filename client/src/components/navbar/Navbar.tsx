@@ -14,7 +14,7 @@ import { AuthContext } from "../../context/authContext";
 import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import { User } from "../../types/customTypes";
-import DropDownList from "../dropDownList/dropDownList";
+import DropDownList from "../dropDownList/DropDownList";
 
 const Navbar = () => {
   const [search, setSearch] = useState("")
@@ -29,7 +29,6 @@ const Navbar = () => {
       if (search) {
         setSearchOpen(true)
         await makeRequest.get("/users?str=" + search).then((res)=>{
-          console.log(res.data);
           setData(res.data);
         });
       }

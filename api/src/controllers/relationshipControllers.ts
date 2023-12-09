@@ -13,6 +13,17 @@ export const getRelationships = (req: Request, res: Response)=>{
     });
 }
 
+export const getAllRelationships = (req: Request, res: Response)=>{
+
+  const q = `SELECT followerUserid, followedUserid FROM relationships 
+              WHERE followedUserid = (?) OR followerUserid = (?)`;
+
+  db.query(q, [req.params.userId, req.params.userId], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json(data.map((relationship:{followerUserid: number}) =>relationship.followerUserid));
+  });
+}
+
 export const addRelationship = (req: Request, res: Response) => {
     const token = req.cookies.accessToken;
     if (!token) return res.status(401).json("Not logged in!");

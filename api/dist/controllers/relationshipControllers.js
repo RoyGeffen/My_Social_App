@@ -8,6 +8,15 @@ export const getRelationships = (req, res) => {
         return res.status(200).json(data.map((relationship) => relationship.followerUserid));
     });
 };
+export const getAllRelationships = (req, res) => {
+    const q = `SELECT followerUserid, followedUserid FROM relationships 
+              WHERE followedUserid = (?) OR followerUserid = (?)`;
+    db.query(q, [req.params.userId, req.params.userId], (err, data) => {
+        if (err)
+            return res.status(500).json(err);
+        return res.status(200).json(data.map((relationship) => relationship.followerUserid));
+    });
+};
 export const addRelationship = (req, res) => {
     const token = req.cookies.accessToken;
     if (!token)
