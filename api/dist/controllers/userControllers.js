@@ -61,8 +61,10 @@ export const updateUser = (req, res) => {
             if (err)
                 res.status(500).json(err);
             affectedRows += data.affectedRows;
-            if (affectedRows > 0)
+            if (affectedRows > 0) {
+                TrackRecentActivity("users", "updateProfile", req, res, userInfo);
                 return res.json("Updated!");
+            }
             return res.status(403).json("You can update only your post!");
         });
     });
@@ -87,6 +89,26 @@ export const getSuggestions = (req, res) => {
             if (err)
                 return res.status(500).json(err);
             return res.json(data);
+        });
+    });
+};
+export const TrackRecentActivity = (tableName, action, req, res, userInfo) => {
+    var final_id = -1;
+    const id_q = `SELECT MAX(id) AS max_id FROM social.${tableName}`;
+    const recent = "INSERT INTO recentactivity (`userid`,`type`,`createdAt`,`foreignid`) VALUES (?)";
+    db.query(id_q, (err, res1) => {
+        if (err)
+            return res.status(500).json(err);
+        final_id = res1[0].max_id;
+        const recentvalues = [
+            userInfo.id,
+            action,
+            new Date().toISOString().slice(0, 19).replace('T', ' '),
+            final_id
+        ];
+        db.query(recent, [recentvalues], (err, data) => {
+            if (err)
+                console.log(err);
         });
     });
 };

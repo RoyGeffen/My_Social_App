@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt, { VerifyErrors } from "jsonwebtoken";
 import { db } from "../connect.js";
+import { TrackRecentActivity } from './userControllers.js';
 
 type Like = {
     userid: number
@@ -16,12 +17,11 @@ export const getLikes = (req:Request,res:Response)=>{
 }
 
 export const addLike = (req:Request, res:Response) => {
-    const token = req.cookies.accessToken;
+  const token = req.cookies.accessToken;
     if (!token) return res.status(401).json("Not logged in!");
-
     jwt.verify(token, JSON.stringify(process.env.SECRET_KET), (err: VerifyErrors | null , userInfo: any| undefined) => {
       if (err) return res.status(403).json("Token is not valid!");
-  
+      
       const q = "INSERT INTO likes (`userid`,`postid`) VALUES (?)"
       const values = [
         userInfo.id,
@@ -30,6 +30,7 @@ export const addLike = (req:Request, res:Response) => {
 
       db.query(q, [values], (err, data) => {
         if (err) return res.status(500).json(err);
+          TrackRecentActivity("likes","like",req, res, userInfo)
         return res.status(200).json(data);
       });
     });
@@ -46,6 +47,7 @@ export const deleteLike = (req:Request, res:Response) => {
 
       db.query(q, [userInfo.id, req.query.postId], (err, data) => {
         if (err) return res.status(500).json(err);
+          TrackRecentActivity("likes","unlike",req, res, userInfo)
         return res.status(200).json("Post has been unliked.");
       });
     });

@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { db } from '../connect.js';
 import jwt, { VerifyErrors } from "jsonwebtoken";
 import moment from "moment";
+import { TrackRecentActivity } from './userControllers.js';
 
 export const getComments = (req:Request, res:Response) => {
     const q = `SELECT c.*, u.id AS userid, name, profilePic FROM comments AS c JOIN users AS u ON (u.id = c.userId)
@@ -31,6 +32,7 @@ export const addComment = (req:Request, res:Response) => {
   
       db.query(q, [values], (err, data) => {
         if (err) return res.status(500).json(err);
+        TrackRecentActivity("comments","newComment",req, res, userInfo)
         return res.status(200).json("Comment has been created.");
       });
     });

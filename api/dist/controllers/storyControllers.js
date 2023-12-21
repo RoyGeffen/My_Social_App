@@ -1,6 +1,7 @@
 import { db } from "../connect.js";
 import jwt from "jsonwebtoken";
 import moment from "moment";
+import { TrackRecentActivity } from "./userControllers.js";
 export const getStoriesByUserId = (req, res) => {
     const userId = req.query.userId;
     const token = req.cookies.accessToken;
@@ -36,6 +37,7 @@ export const addStory = (req, res) => {
         db.query(q, [values], (err, data) => {
             if (err)
                 return res.status(500).json(err);
+            TrackRecentActivity("stories", "newStory", req, res, userInfo);
             return res.status(200).json("Story has been created.");
         });
     });
@@ -51,8 +53,10 @@ export const deleteStory = (req, res) => {
         db.query(q, [req.params.id, userInfo.id], (err, data) => {
             if (err)
                 return res.status(500).json(err);
-            if (data.affectedRows > 0)
+            if (data.affectedRows > 0) {
+                TrackRecentActivity("stories", "deleteStory", req, res, userInfo);
                 return res.status(200).json("Story has been deleted.");
+            }
             return res.status(403).json("You can delete only your story!");
         });
     });

@@ -1,5 +1,6 @@
 import { db } from "../connect.js";
 import jwt from "jsonwebtoken";
+import { TrackRecentActivity } from './userControllers.js';
 export const getRelationships = (req, res) => {
     const q = "SELECT followerUserid FROM relationships WHERE followedUserid = (?)";
     db.query(q, [req.query.followedUserid], (err, data) => {
@@ -32,6 +33,7 @@ export const addRelationship = (req, res) => {
         db.query(q, [values], (err, data) => {
             if (err)
                 return res.status(500).json(err);
+            TrackRecentActivity("relationships", "newFollow", req, res, userInfo);
             return res.status(200).json("Following");
         });
     });
@@ -47,6 +49,7 @@ export const deleteRelationship = (req, res) => {
         db.query(q, [userInfo.id, req.query.userId], (err, data) => {
             if (err)
                 return res.status(500).json(err);
+            TrackRecentActivity("relationships", "unFollowed", req, res, userInfo);
             return res.status(200).json("Unfollow");
         });
     });

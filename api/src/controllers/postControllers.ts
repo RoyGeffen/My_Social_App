@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { db } from '../connect.js';
 import jwt, { VerifyErrors } from "jsonwebtoken";
 import moment from "moment";
+import { TrackRecentActivity } from './userControllers.js';
 
 
 export const getPosts = (req: Request, res: Response) => {
@@ -45,6 +46,7 @@ export const addPost = (req: Request, res: Response) => {
 
     db.query(q, [values], (err, data) => {
       if (err) return res.status(500).json(err);
+      TrackRecentActivity("posts","newPost",req, res, userInfo)
       return res.status(200).json("Post has been created.");
     });
   });
@@ -63,7 +65,11 @@ export const deletePost = (req: Request, res: Response) => {
 
     db.query(q, [req.params.id, userInfo.id], (err, data) => {
       if (err) return res.status(500).json(err);
-      if(data.affectedRows>0) return res.status(200).json("Post has been deleted.");
+      if(data.affectedRows>0) 
+      {
+        TrackRecentActivity("posts","deletePost",req, res, userInfo)
+        return res.status(200).json("Post has been deleted.");
+      }
       return res.status(403).json("You can delete only your post")
     });
   });

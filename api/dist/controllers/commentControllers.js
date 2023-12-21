@@ -1,6 +1,7 @@
 import { db } from '../connect.js';
 import jwt from "jsonwebtoken";
 import moment from "moment";
+import { TrackRecentActivity } from './userControllers.js';
 export const getComments = (req, res) => {
     const q = `SELECT c.*, u.id AS userid, name, profilePic FROM comments AS c JOIN users AS u ON (u.id = c.userId)
     WHERE c.postId = ? ORDER BY c.createdAt DESC
@@ -28,6 +29,7 @@ export const addComment = (req, res) => {
         db.query(q, [values], (err, data) => {
             if (err)
                 return res.status(500).json(err);
+            TrackRecentActivity("comments", "newComment", req, res, userInfo);
             return res.status(200).json("Comment has been created.");
         });
     });

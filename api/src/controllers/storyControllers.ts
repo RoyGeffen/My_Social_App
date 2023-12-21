@@ -2,6 +2,7 @@ import { db } from "../connect.js";
 import jwt, { VerifyErrors } from "jsonwebtoken";
 import moment from "moment";
 import { Request, Response, NextFunction } from 'express';
+import { TrackRecentActivity } from "./userControllers.js";
 
 export const getStoriesByUserId = (req: Request, res: Response) => {
     const userId = req.query.userId;
@@ -39,6 +40,7 @@ export const addStory = (req: Request, res: Response) => {
   
       db.query(q, [values], (err, data) => {
         if (err) return res.status(500).json(err);
+        TrackRecentActivity("stories","newStory",req, res, userInfo)
         return res.status(200).json("Story has been created.");
       });
     });
@@ -54,8 +56,10 @@ export const deleteStory = (req: Request, res: Response) => {
     const q = "DELETE FROM stories WHERE `id`=?  AND `userid` = ?"
     db.query(q, [req.params.id, userInfo.id],(err, data) => {
       if (err) return res.status(500).json(err);
-      if (data.affectedRows > 0)
+      if (data.affectedRows > 0){
+        TrackRecentActivity("stories","deleteStory",req, res, userInfo)
         return res.status(200).json("Story has been deleted.");
+      }
       return res.status(403).json("You can delete only your story!");
     });
   })

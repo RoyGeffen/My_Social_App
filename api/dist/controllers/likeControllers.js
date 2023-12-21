@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { db } from "../connect.js";
+import { TrackRecentActivity } from './userControllers.js';
 export const getLikes = (req, res) => {
     const q = "SELECT userid FROM likes WHERE postid = ?";
     db.query(q, [req.query.postId], (err, data) => {
@@ -23,6 +24,7 @@ export const addLike = (req, res) => {
         db.query(q, [values], (err, data) => {
             if (err)
                 return res.status(500).json(err);
+            TrackRecentActivity("likes", "like", req, res, userInfo);
             return res.status(200).json(data);
         });
     });
@@ -38,6 +40,7 @@ export const deleteLike = (req, res) => {
         db.query(q, [userInfo.id, req.query.postId], (err, data) => {
             if (err)
                 return res.status(500).json(err);
+            TrackRecentActivity("likes", "unlike", req, res, userInfo);
             return res.status(200).json("Post has been unliked.");
         });
     });
