@@ -51,7 +51,7 @@ const LatestActivity = () => {
         <span>Latest Activities</span>
         {data?.map((user:Activity)=>(
           <div className="user" key={new Date(user.createdAt).toISOString()}>
-            <div className="userInfo">
+            <div className="userInfo" onClick={()=>navigate(`/profile/${user.userid}`)}>
                 <img
                     src={user.profilePic}
                     alt=""
