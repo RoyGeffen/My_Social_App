@@ -11,6 +11,7 @@ import cookieRouter from "./routes/cookieRoutes.js";
 import postRouter from "./routes/postRoutes.js";
 import relationshipsRouter from "./routes/relationshipsRoutes.js";
 import uploadRouter from "./routes/uploadRouters.js";
+import recentActivityRouter from "./routes/recentActivityRoutes.js";
 dotenv.config();
 const app = express();
 app.use((req, res, next) => {
@@ -27,6 +28,7 @@ app.use(cors(corsOptions));
 app.use(cookieParser());
 app.use("/api/upload", uploadRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/recentActivity", recentActivityRouter);
 app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
 app.use("/api/comments", commentRouter);
