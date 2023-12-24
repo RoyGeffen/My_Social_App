@@ -1,6 +1,6 @@
 @import "../../styles/global.scss";
 
-.page {
+.post {
   @include themify($themes) {
     -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
     -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
@@ -8,17 +8,16 @@
     border-radius: 20px;
     background-color: themed("bg");
     color: themed("textColor");
-    height: 80%;
 
     .container {
       padding: 20px;
-      height: 750px;
+
       .user {
         display: flex;
         align-items: center;
         justify-content: space-between;
         position: relative;
-        padding-bottom: 10px;
+
         .userInfo {
           display: flex;
           gap: 20px;
@@ -43,42 +42,42 @@
             }
           }
         }
-      //   // button{
-      //   //   position: absolute;
-      //   //   top: 30px;
-      //   //   right: 10px;
-      //   //   border: none;
-      //   //   background: #f0544f;
-      //   //   padding: 5px;
-      //   //   cursor: pointer;
-      //   //   color: white;
-      //   // }
+        button{
+          position: absolute;
+          top: 30px;
+          right: 10px;
+          border: none;
+          background: #f0544f;
+          padding: 5px;
+          cursor: pointer;
+          color: white;
+        }
       }
 
-      // .content {
-      //   margin: 20px 0px;
+      .content {
+        margin: 20px 0px;
 
-      //   img {
-      //     width: 100%;
-      //     max-height: 500px;
-      //     object-fit: cover;
-      //     margin-top: 20px;
-      //   }
-      // }
+        img {
+          width: 100%;
+          max-height: 500px;
+          object-fit: cover;
+          margin-top: 20px;
+        }
+      }
 
-      // .info {
-      //   display: flex;
-      //   align-items: center;
-      //   gap: 20px;
+      .info {
+        display: flex;
+        align-items: center;
+        gap: 20px;
 
-      //   .item {
-      //     display: flex;
-      //     align-items: center;
-      //     gap: 10px;
-      //     cursor: pointer;
-      //     font-size: 14px;
-      //   }
-      // }
+        .item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          cursor: pointer;
+          font-size: 14px;
+        }
+      }
     }
   }
 }

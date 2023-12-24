@@ -11,7 +11,7 @@
 
         position: relative;
         overflow: hidden;
-
+        
 
         .vertical-line{
           content: '';
@@ -24,17 +24,18 @@
         }
 
         .container {
-            // max-height: 800px; // Set a fixed height for the user container
-            // overflow-y: auto;
+            max-height: 800px;
+            min-height: 750px; // Set a fixed height for the user container
+            overflow-y: auto;
             padding: 20px;
             
             .search {
                 gap: 30px;
                 cursor: pointer;
-
+                
                 background-color: themed("bgSoft");
                 display: flex;
-                align-items: flex-start;
+                align-items: center;
                 margin-bottom: 10px;
                 max-width: 250px;
                 gap: 10px;
@@ -67,7 +68,7 @@
                 scrollbar-color: themed(bgSoft);
                 width: 270px;
                 overflow-x: hidden;
-                
+
                 &::-webkit-scrollbar {
                     width: 8px;
                 }
