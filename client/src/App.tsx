@@ -16,9 +16,9 @@ import "./styles/global.scss";
 import { ReactNode, useContext, useEffect, useState } from "react";
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from "./context/authContext";
-import { makeRequest } from "./axios";
 import axios from "axios";
 import Friends from "./pages/friends/Friends";
+import Chats from "./pages/chats/chats";
 
 
 
@@ -34,7 +34,7 @@ function App() {
 
   const queryClient = new QueryClient()
 
-  const Layout = () => {
+  const BasicLayout = () => {
     return (
       <QueryClientProvider client={queryClient}>
         <div className={`theme-${darkMode ? "dark" : "light"}`}>
@@ -50,7 +50,22 @@ function App() {
       </QueryClientProvider>
     );
   };
-  
+  const ChatsLayout = () => {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <div className={`theme-${darkMode ? "dark" : "light"}`}>
+          <Navbar />
+          <div style={{ display: "flex" }}>
+            <LeftBar />
+            <div style={{ flex: 16 }}>
+              <Outlet />
+            </div>
+          </div>
+        </div>
+      </QueryClientProvider>
+    );
+  };
+
   const CheckCookie = async()=>{
     const res = await axios.get("http://localhost:8080/api/cookies/tokenExists", {
       withCredentials: true,
@@ -93,7 +108,7 @@ function App() {
       path: "/",
       element: (
         <ProtectedRoute>
-          <Layout />
+          <BasicLayout />
         </ProtectedRoute>
       ),
       children: [
@@ -111,6 +126,22 @@ function App() {
         },
       ],
     },
+
+    {
+      path: "/",
+      element: (
+        <ProtectedRoute>
+          <ChatsLayout />
+        </ProtectedRoute>
+      ),
+      children: [
+        {
+          path: "/chats",
+          element: <Chats />,
+        },
+      ],
+    },
+
     {
       path: "/login",
       element: <Login />,

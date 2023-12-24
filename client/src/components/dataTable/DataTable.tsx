@@ -1,5 +1,5 @@
 import "./datatable.scss";
-import { DataGrid, DataGridProps } from "@mui/x-data-grid";
+import { DataGrid, DataGridProps, GridColDef } from "@mui/x-data-grid";
 import { Link, Navigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -39,10 +39,11 @@ const friendsColumns = [
     field: "city",
     headerName: "City",
     width: 120,
-  }
+  },
+  
 ];
 
-const DataTable =  () => {//columns:any
+const DataTable =  (column:any) => {
   const location = useLocation();
   const path = location.pathname.split("/")[1];
   const [list,setList] = useState([]);
@@ -103,9 +104,9 @@ const DataTable =  () => {//columns:any
     <div className="datatable">
       <div className="datatableTitle">
         Your {path}!
-        <Link to={""} className="link">
+        {/* <Link to={""} className="link">
           Add New
-        </Link>
+        </Link> */}
       </div>
       {rIsLoading || (!relationshipData && !relationshipData[0].id)? "Loading" :
        <DataGrid className="table" {...dataGridProps}/>
