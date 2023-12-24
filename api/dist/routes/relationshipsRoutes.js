@@ -1,7 +1,8 @@
 import express from "express";
-import { getRelationships, addRelationship, deleteRelationship, getAllRelationships } from "../controllers/relationshipControllers.js";
+import { getRelationships, addRelationship, deleteRelationship, getAllRelationships, getAllFollowedUsers } from "../controllers/relationshipControllers.js";
 const router = express.Router();
 router.get("/", getRelationships);
+router.get("/followed", getAllFollowedUsers);
 router.get("/:userId", getAllRelationships);
 router.post("/", addRelationship);
 router.delete("/", deleteRelationship);

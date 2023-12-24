@@ -65,7 +65,6 @@ const LatestActivity = () => {
         ))}
       </div>
     )
-
 }
 
 export default LatestActivity;

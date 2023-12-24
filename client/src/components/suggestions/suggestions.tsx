@@ -21,7 +21,6 @@ const Suggestions = () => {
   
     const handleDismiss = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>)=>{
       let otherUserid = parseInt(e.currentTarget.value);
-      console.log(otherUserid);
       setBlackList((prev)=>[...prev, otherUserid])
     }
   

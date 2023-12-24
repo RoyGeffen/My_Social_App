@@ -1,86 +1,115 @@
 import "./datatable.scss";
-import { DataGrid } from "@mui/x-data-grid";
-//import { userColumns, userRows } from "../../datatablesource";
+import { DataGrid, DataGridProps } from "@mui/x-data-grid";
 import { Link, Navigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
 import { AuthContext } from "../../context/authContext";
 import {useContext} from "react";
 import { User } from "../../types/customTypes";
 
-type Columns={
-    columns: User
-}
+const friendsColumns = [
+  { field: "userid", headerName: "ID", width: 10},
+  {
+    field: "username",
+    headerName: "Username",
+    width: 160,
+    renderCell: (params:any) => {
+      return (
+        <div className="cellWithImg">
+          <img className="cellImg" 
+            src={params.row.profilePic} alt="" />
+          {params.row.username}
+        </div>
+      );
+    },
+  },
+  {
+    field: "name",
+    headerName: "Name",
+    width: 130,
+  },
+  {
+    field: "email",
+    headerName: "Email",
+    width: 180,
+  },
+  {
+    field: "city",
+    headerName: "City",
+    width: 120,
+  }
+];
 
-const DataTable =  (columns:any) => {
+const DataTable =  () => {//columns:any
   const location = useLocation();
   const path = location.pathname.split("/")[1];
   const [list,setList] = useState([]);
-  const {currentUser} = useContext(AuthContext)
+  const queryClient = useQueryClient();
 
   const { isLoading: rIsLoading, data: relationshipData } = useQuery(
     ["relationship"],
     () =>
-      makeRequest.get("/relationships/" + currentUser?.id).then((res) => {
+      makeRequest.get("/relationships/followed").then((res) => {
         return res.data;
       })
   );
 
-  const handleDelete = async (id:number) => {
-
+  const handleUnFollow = async (id:number) => {
+    await makeRequest.delete("/relationships?userId=" + id);
+    queryClient.invalidateQueries(["relationship"]);
   };
 
   useEffect(()=>{
-    setList(relationshipData);
+    if(!rIsLoading && relationshipData && relationshipData[0].id){
+      setList(relationshipData.map((row:User)=>{
+        return { id: row.id ,userid: row.id, username: row.username, 
+                name: row.name, email: row.email, city:row.city, profilePic:row.profilePic }
+      }));
+    }
   },[relationshipData])
-  useEffect(()=>{
-    //reFetch();
-  },[path])
-  
-
 
   const actionColumn = [
     {
       field: "action",
       headerName: "Action",
-      width: 200,
+      width: 170,
       renderCell: (params:any) => {
         return (
           <div className="cellAction">
-            <Link to={"/profile/"+params.row.otherId} style={{ textDecoration: "none" }}>
+            <Link to={"/profile/"+params.row.id} style={{ textDecoration: "none" }}>
               <div className="viewButton">View</div>
             </Link>
             <div
               className="deleteButton"
-              onClick={() => handleDelete(params.row.otherId)}
+              onClick={() => handleUnFollow(params.row.id)}
             >
-              Delete
+              Un-Follow
             </div>
           </div>
         );
       },
     },
   ];
+  const dataGridProps: DataGridProps = {
+    rows: list,
+    columns: friendsColumns.concat(actionColumn),
+    checkboxSelection: true,
+    disableRowSelectionOnClick: true,
+  };
 
   return (
     <div className="datatable">
       <div className="datatableTitle">
         Your {path}!
-        <Link to={`/${path}/new${(path.charAt(0).toUpperCase() + path.slice(1)).slice(0,-1)}`} className="link">
+        <Link to={""} className="link">
           Add New
         </Link>
       </div>
-      {/* {!rIsLoading && <DataGrid
-        className="datagrid"
-        rows={list}
-        columns={columns.concat(actionColumn)}
-        pageSize={9}
-        rowsPerPageOptions={[9]}
-        checkboxSelection
-        getRowId={row=>row.otherId}
-      />} */}
+      {rIsLoading || (!relationshipData && !relationshipData[0].id)? "Loading" :
+       <DataGrid className="table" {...dataGridProps}/>
+      }
     </div>
   );
 };
