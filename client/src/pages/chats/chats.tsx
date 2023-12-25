@@ -2,7 +2,7 @@ import moment from "moment";
 import "../home/home.scss"
 import "./chats.scss"
 import mic from "../../assets/mic.png";
-import whiteMic from "../../assets/whiteMic.jpg";
+import send from "../../assets/send.png";
 import emoji from "../../assets/emoji.png";
 import { Link } from "react-router-dom";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
@@ -45,8 +45,13 @@ const Chats=()=>{
                     <div className="footer">
                         
                         <img src={emoji} alt="" />
-                        <div>+</div>
-                        <div>type a message</div>
+                        <p>+</p>
+                        <div className="message-input">
+                        <SearchOutlinedIcon />
+                            {/* onClick={()=>} */}
+                            <input type="text" placeholder="Type a message..."/>
+                        </div>
+                        <img src={send} alt="" />
                         <img src={mic} alt="" />
                     </div>
                 </div>

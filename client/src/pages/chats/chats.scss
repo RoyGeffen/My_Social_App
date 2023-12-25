@@ -34,7 +34,6 @@
 
 
             .search {
-                gap: 30px;
                 cursor: pointer;
                 background-color: themed("bgSoft");
                 display: flex;
@@ -50,7 +49,7 @@
                 
                 input {
                     border: none;
-                    width: 100px;
+                    width: 100%;
                     background-color: transparent;
                     color: themed("textColor");
 
@@ -234,13 +233,48 @@
                     display: flex;
                     align-items: center; 
                     justify-content: start;
-                    
+                    cursor: pointer;
+
                     img {
+                        padding-left: 20px;
+                        padding-right: 10px;
                         width: 30px;
                         height: 30px;
-                        border-radius: 100%;
+                        border-radius: 50%;
                         object-fit:scale-down;
                     } 
+                    p{
+                        padding-left: 10px; 
+                        padding-right: 20px; 
+                        font-size:40px;
+                        color:themed("textColor");
+                    }
+                    .message-input {
+                        cursor: pointer;
+                        background-color: themed("bgSoft");
+                        display: flex;
+                        align-items: center;
+                        margin-right: 0px;
+                        width: 1000px;
+                        gap: 10px;
+                        border: 1px solid themed("border");
+                        border-radius: 5px;
+                        padding: 5px;
+                        position:sticky;
+                        
+                        
+                        input {
+                            border: 0px;
+                            width: 100%;
+                            background-color: transparent;
+                            color: themed("textColor");
+        
+                            @include tablet{
+                                width: 200px;
+                            }
+                        }
+        
+                    }
                     
                    
                 }
