@@ -6,7 +6,9 @@ $themes: (
     bgSoft: #f6f3f3,
     textColorSoft: #555,
     border: lightgray,
-    bgOver: rgba(205, 205, 205,1)
+    bgOver: rgba(205, 205, 205,1),
+    myMessageColor : lightgreen,
+    otherMessageColor : lightblue
   ),
   dark: (
     textColor: whitesmoke,
@@ -15,7 +17,9 @@ $themes: (
     bgSoft: #333,
     textColorSoft: lightgray,
     border: #444,
-    bgOver: rgb(104, 104, 104)
+    bgOver: rgb(104, 104, 104),
+    myMessageColor : green,
+    otherMessageColor : blue
   ),
 );
 
