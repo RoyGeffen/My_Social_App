@@ -21,7 +21,7 @@ export type Like = {
   liked: boolean | null;
 }
 
-const SinglePost = (props :Props) => {
+const SinglePost = (props: Props) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [numberComments, setNumberComments] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);

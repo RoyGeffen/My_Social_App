@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
-import axios from "axios";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./dropDownList.scss"
 import { AuthContext } from "../../context/authContext";
@@ -23,8 +22,8 @@ const DropDownList = ()=>{
       logout: "http://res.cloudinary.com/das1ifbzs/image/upload/v1691911556/upload/hcxccemiyztauczvev0v.png",
       mail: "http://res.cloudinary.com/das1ifbzs/image/upload/v1691911581/upload/uhljakmqlluwfpwxcux8.png",
       register : "http://res.cloudinary.com/das1ifbzs/image/upload/v1691911571/upload/fzupgqsalkhowtrlkwzn.png"
-
     }
+    
     const LogOutcurrentUser = async () => {
         try {
             makeRequest.post('/auth/logout')
